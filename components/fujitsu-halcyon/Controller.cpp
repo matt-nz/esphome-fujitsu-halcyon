@@ -66,9 +66,10 @@ bool Controller::start() {
 
     return true;
 }
-ESP_LOGD(TAG, "uart_event_task start");
 
 void Controller::uart_event_task() {
+    ESP_LOGD(TAG, "uart_event_task start!");
+
     uart_event_t event;
 
     for(;;) {
