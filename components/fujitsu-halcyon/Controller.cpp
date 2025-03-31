@@ -22,16 +22,6 @@ bool Controller::start() {
     constexpr uint32_t stack_depth = 4096; // ?
     constexpr UBaseType_t task_priority = 12; // ?
 
-    // Echo UART config
-    ESP_LOGD(TAG, "UART config: baudrate=%d, data_bits=%d, stop_bits=%d, parity=%d, flow_ctrl=%d",
-             uart_config.baud_rate, uart_config.data_bits, uart_config.stop_bits,
-             uart_config.parity, uart_config.flow_ctrl);
-
-    // Log TX and RX pins
-    int tx_pin, rx_pin;
-    uart_get_pin(this->uart_num, &tx_pin, &rx_pin, nullptr, nullptr);
-    ESP_LOGD(TAG, "UART pins: tx_pin=%d, rx_pin=%d", tx_pin, rx_pin);
-
     // User should have called uart_set_pin before this point if necessary
 
     if (this->uart_event_queue == nullptr && uart_is_driver_installed(this->uart_num)) {
@@ -76,6 +66,7 @@ bool Controller::start() {
 
     return true;
 }
+ESP_LOGD(TAG, "uart_event_task start");
 
 void Controller::uart_event_task() {
     uart_event_t event;
@@ -158,6 +149,8 @@ void Controller::uart_write_bytes(const uint8_t *buf, size_t length) {
 }
 
 void Controller::process_packet(const Packet::Buffer& buffer, bool lastPacketOnWire) {
+    ESP_LOGD(TAG, "process_packet start");
+
     bool error_flag_changed = false;
     std::function<void()> deferred_callback;
 
