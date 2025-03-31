@@ -13,12 +13,24 @@ namespace fujitsu_halcyon_controller {
 static const char* TAG = "fujitsu_halcyon_controller::Controller";
 
 bool Controller::start() {
+    ESP_LOGD(TAG, "Controller start");
+
     int err;
     auto uart_config = UARTConfig;
     constexpr int intr_alloc_flags = 0;
     constexpr uint32_t queue_size = 20; // ?
     constexpr uint32_t stack_depth = 4096; // ?
     constexpr UBaseType_t task_priority = 12; // ?
+
+    // Echo UART config
+    ESP_LOGD(TAG, "UART config: baudrate=%d, data_bits=%d, stop_bits=%d, parity=%d, flow_ctrl=%d",
+             uart_config.baud_rate, uart_config.data_bits, uart_config.stop_bits,
+             uart_config.parity, uart_config.flow_ctrl);
+
+    // Log TX and RX pins
+    int tx_pin, rx_pin;
+    uart_get_pin(this->uart_num, &tx_pin, &rx_pin, nullptr, nullptr);
+    ESP_LOGD(TAG, "UART pins: tx_pin=%d, rx_pin=%d", tx_pin, rx_pin);
 
     // User should have called uart_set_pin before this point if necessary
 
